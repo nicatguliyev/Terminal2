@@ -34,6 +34,8 @@ public class SeatModel {
         this.seat_id = seat_id;
     }
 
+    // cc
+
     public void setSeatLabel(String seatLabel) {
         this.seatLabel = seatLabel;
     }
