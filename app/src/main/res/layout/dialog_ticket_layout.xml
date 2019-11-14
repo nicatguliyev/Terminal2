@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#00ff4455"
+    android:gravity="center">
+
+
+     <android.support.v7.widget.CardView
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         app:cardCornerRadius="15dp"
+         android:layout_marginLeft="20dp"
+         android:layout_marginRight="20dp"
+         android:layout_marginTop="20dp"
+         android:layout_marginBottom="20dp"
+         app:cardBackgroundColor="#e6e9ec">
+
+          <RelativeLayout
+              android:id="@+id/topLyt"
+              android:layout_width="match_parent"
+              android:layout_height="40dp">
+
+
+               <ImageView
+                   android:id="@+id/closeImg"
+                   android:layout_width="40dp"
+                   android:layout_height="30dp"
+                   android:padding="5dp"
+                   android:layout_alignParentRight="true"
+                   android:src="@drawable/red_cancel_icon"
+                   android:clickable="true"
+                   android:layout_marginRight="5dp"
+                   android:layout_marginTop="5dp"/>
+
+          </RelativeLayout>
+
+          <RelativeLayout
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginTop="50dp">
+
+               <TextView
+                   android:id="@+id/stTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Stansiya:"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"/>
+
+               <TextView
+                   android:id="@+id/stNameTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="16dp"
+                   android:layout_marginTop="1dp"
+                   android:layout_toRightOf="@+id/stTxt"
+                   android:text=""
+                   android:textColor="#000"
+                   android:textSize="14sp"
+                   android:textStyle="bold|italic" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/teyinatSt"
+                    android:layout_below="@+id/stTxt"
+                    android:text="Təyinat stansiyası:"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="15sp"
+                    android:layout_marginTop="10dp"/>
+
+               <TextView
+                   android:id="@+id/destStationName"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/stTxt"
+                   android:layout_marginLeft="16dp"
+                   android:layout_marginTop="10dp"
+                   android:layout_toRightOf="@+id/teyinatSt"
+                   android:text=""
+                   android:textColor="#000"
+                   android:textSize="14sp"
+                   android:textStyle="bold|italic" />
+
+               <TextView
+                   android:id="@+id/qatarTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/stTxt"
+                   android:text="Qatar:"
+                   android:layout_marginTop="40dp"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"/>
+
+               <TextView
+                   android:id="@+id/trainNameTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text=""
+                   android:layout_toRightOf="@+id/qatarTxt"
+                   android:layout_below="@+id/stTxt"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="14sp"
+                   android:layout_marginTop="40dp"
+                   android:textColor="#000"
+                   android:textStyle="bold|italic"/>
+
+               <TextView
+                   android:id="@+id/vaqonTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/qatarTxt"
+                   android:text="Vaqon:"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"/>
+
+               <TextView
+                   android:id="@+id/vaqonValTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text=""
+                   android:layout_toRightOf="@+id/vaqonTxt"
+                   android:layout_below="@+id/qatarTxt"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"
+                   android:layout_marginTop="10dp"
+                   android:textColor="#000"
+                   android:textStyle="bold|italic"/>
+
+               <TextView
+                   android:id="@+id/yerTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/vaqonTxt"
+                   android:text="Yer:"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"/>
+
+               <TextView
+                   android:id="@+id/yerValTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text=""
+                   android:layout_toRightOf="@+id/yerTxt"
+                   android:layout_below="@+id/vaqonTxt"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"
+                   android:layout_marginTop="10dp"
+                   android:textColor="#000"
+                   android:textStyle="bold|italic"/>
+
+               <TextView
+                   android:id="@+id/klassTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/yerTxt"
+                   android:text="Klass:"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"/>
+
+               <TextView
+                   android:id="@+id/klassValTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text=""
+                   android:layout_toRightOf="@+id/klassTxt"
+                   android:layout_below="@+id/yerTxt"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"
+                   android:layout_marginTop="10dp"
+                   android:textColor="#000"
+                   android:textStyle="bold|italic"/>
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/klassTxt"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:background="@color/colorPrimary"/>
+
+               <TextView
+                   android:id="@+id/srnsnTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/divider"
+                   android:text="Sərnişin:"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"/>
+
+               <TextView
+                   android:id="@+id/srnsnNameTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text=""
+                   android:layout_toRightOf="@+id/srnsnTxt"
+                   android:layout_below="@+id/divider"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="14sp"
+                   android:layout_marginTop="10dp"
+                   android:textColor="#000"
+                   android:textStyle="bold|italic"/>
+
+               <TextView
+                   android:id="@+id/senedTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/srnsnTxt"
+                   android:text="Sənəd No:"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"/>
+
+               <TextView
+                   android:id="@+id/senedNoTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text=""
+                   android:layout_toRightOf="@+id/senedTxt"
+                   android:layout_below="@+id/srnsnTxt"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="14sp"
+                   android:layout_marginTop="10dp"
+                   android:textColor="#000"
+                   android:textStyle="bold|italic"/>
+
+               <TextView
+                   android:id="@+id/birthTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/senedTxt"
+                   android:text="Doğum tarixi:"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"/>
+
+               <TextView
+                   android:id="@+id/birthValTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_above="@+id/ticketTypeTxt"
+                   android:layout_below="@+id/senedTxt"
+                   android:layout_marginLeft="16dp"
+                   android:layout_marginTop="10dp"
+                   android:layout_toRightOf="@+id/birthTxt"
+                   android:text=""
+                   android:textColor="#000"
+                   android:textSize="14sp"
+                   android:textStyle="bold|italic" />
+
+               <TextView
+                   android:id="@+id/typeTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/birthTxt"
+                   android:text="Bilet tipi:"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="15sp"/>
+
+               <TextView
+                   android:id="@+id/ticketTypeTxt"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text=""
+                   android:layout_toRightOf="@+id/typeTxt"
+                   android:layout_below="@+id/birthTxt"
+                   android:layout_marginLeft="16dp"
+                   android:textSize="14sp"
+                   android:layout_marginTop="10dp"
+                   android:textColor="#000"
+                   android:textStyle="bold|italic"/>
+
+               <Button
+                   android:id="@+id/confirmBtn"
+                   android:layout_width="match_parent"
+                   android:layout_height="50dp"
+                   android:layout_alignParentBottom="true"
+                   android:text="TƏSDİQLƏ"
+                   android:textColor="#fff"
+                   android:background="@drawable/buttton_background"/>
+
+               <TextView
+                   android:id="@+id/confirmMsg"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_alignParentBottom="true"
+                   android:text="Bilet artıq təsdiqlənib"
+                   android:layout_centerHorizontal="true"
+                   android:visibility="invisible"
+                   android:gravity="center"
+                   android:layout_marginBottom="20dp"
+                   android:textStyle="bold"
+                   android:textColor="#FF0017"/>
+
+
+          </RelativeLayout>
+
+     </android.support.v7.widget.CardView>
+
+
+
+</RelativeLayout>

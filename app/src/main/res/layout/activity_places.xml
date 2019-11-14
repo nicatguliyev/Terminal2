@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PlacesActivity">
+
+    <RelativeLayout
+        android:id="@+id/actionBarLyt"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/blue">
+
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:background="#00ff4455"
+            android:src="@drawable/back_arrow"
+            android:padding="14dp"
+            android:paddingRight="20dp"/>
+
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:textColor="#fff"
+            android:background="#00ff4455"/>
+
+        <TextView
+            android:id="@+id/titleTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ümumi məlumat"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/umumiTxt"
+        android:layout_below="@+id/actionBarLyt"
+        android:text="Ümumi yerlərin sayı: "
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:layout_marginLeft="16dp"/>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bosTxt"
+        android:text="Boş yerlərin sayı: "
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/umumiTxt"
+        android:textSize="20sp"
+        android:layout_marginLeft="16dp"/>
+
+    <Button
+        android:id="@+id/bosBtn"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/umumiBtn"
+        android:layout_alignStart="@+id/umumiBtn"
+        android:background="#FF4455"
+        android:clickable="false"
+        android:textColor="#fff"
+        android:layout_marginTop="5dp"
+        android:text="---"/>
+
+
+    <Button
+        android:id="@+id/umumiBtn"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@+id/umumiTxt"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/actionBarLyt"
+        android:background="#FF4455"
+        android:clickable="false"
+        android:textColor="#fff"
+        android:text="---"
+        android:layout_marginLeft="20dp"/>
+
+    <TextView
+        android:id="@+id/toplamTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="toplam / yoxlanılıb"
+        android:layout_below="@+id/bosBtn"
+        android:layout_marginTop="20dp"
+        android:textColor="#000"
+        android:textStyle="italic|bold"
+        android:layout_alignStart="@+id/bosBtn"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/elekTxt"
+        android:text="Elektron biletlər:"
+        android:layout_marginTop="60dp"
+        android:layout_below="@id/bosTxt"
+        android:textSize="20sp"
+        android:layout_marginLeft="16dp"/>
+
+    <Button
+        android:id="@+id/elekBtn"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@+id/umumiTxt"
+        android:layout_marginTop="1dp"
+        android:layout_below="@+id/toplamTxt"
+        android:background="#FF4455"
+        android:clickable="false"
+        android:textColor="#fff"
+        android:text="-- / --"
+        android:layout_marginLeft="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/standartTxt"
+        android:text="Standart biletlər:"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/elekTxt"
+        android:textSize="20sp"
+        android:layout_marginLeft="16dp"/>
+
+    <Button
+        android:id="@+id/standartBtn"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/elekBtn"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="3dp"
+        android:layout_toRightOf="@+id/umumiTxt"
+        android:background="#FF4455"
+        android:clickable="false"
+        android:text="-- / --"
+        android:textColor="#fff" />
+
+    <Button
+        android:id="@+id/seePlacesBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textColor="#fff"
+        android:text="Yerlərə bax"
+        android:background="#4CAF50"/>
+
+
+</RelativeLayout>

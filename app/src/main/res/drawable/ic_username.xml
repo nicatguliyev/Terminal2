@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item >
+        <shape android:shape="rectangle">
+            <solid android:color="#2914ed"/>
+            <corners
+                android:bottomLeftRadius="5dp"
+                android:topLeftRadius="5dp"/>
+        </shape>
+    </item>
+
+    <item >
+        <inset android:drawable="@drawable/usericon"
+            android:insetLeft="10dp"
+            android:insetRight="10dp"
+            android:insetTop="10dp"
+            android:insetBottom="10dp"/>
+
+    </item>
+
+</layer-list>

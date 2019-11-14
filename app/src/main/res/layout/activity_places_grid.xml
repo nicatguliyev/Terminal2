@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".PlacesGridActivity">
+
+    <RelativeLayout
+        android:id="@+id/actionBarLyt"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/blue">
+
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:background="#00ff4455"
+            android:src="@drawable/back_arrow"
+            android:padding="14dp"
+            android:paddingRight="20dp"/>
+
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:textColor="#fff"
+            android:background="#00ff4455"/>
+
+        <TextView
+            android:id="@+id/titleTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ümumi məlumat"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/placeGrid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="5"
+        android:horizontalSpacing="5dp"
+        android:layout_below="@+id/actionBarLyt"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="#FFFFFF"
+        android:layout_marginBottom="60dp"
+        android:verticalSpacing="5dp">
+
+    </GridView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#80FFC107">
+
+        <View
+            android:id="@+id/blackView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="#000"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bağlı yer"
+            android:layout_toRightOf="@+id/blackView"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#B7000000"/>
+
+        <View
+            android:id="@+id/greenView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="#358C01"
+            android:layout_below="@+id/blackView"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/blackView"
+            android:layout_toRightOf="@+id/greenView"
+            android:text="Boş yer"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="#B7000000"/>
+
+        <View
+            android:id="@+id/redView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="#FD0001"
+            android:layout_marginLeft="90dp"
+            android:layout_marginTop="5dp"/>
+
+
+        <TextView
+            android:id="@+id/stBiletTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Standart bilet"
+            android:layout_toRightOf="@+id/redView"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#B7000000"/>
+
+        <View
+            android:id="@+id/blueView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="#0000FE"
+            android:layout_below="@+id/redView"
+            android:layout_marginLeft="90dp"
+            android:layout_marginTop="3dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elektron bilet"
+            android:layout_toRightOf="@+id/redView"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="30dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#B7000000"/>
+
+        <ImageView
+            android:id="@+id/doneImg"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/stBiletTxt"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/white_done2"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yoxlanılıb"
+            android:layout_toRightOf="@+id/doneImg"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="6dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#B7000000"/>
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

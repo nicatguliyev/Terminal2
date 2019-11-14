@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Number">
+
+    <RelativeLayout
+        android:id="@+id/actionBarLyt"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/blue">
+
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:background="#00ff4455"
+            android:src="@drawable/back_arrow"
+            android:padding="14dp"
+            android:paddingRight="20dp"/>
+
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:background="#00ff4455"/>
+
+        <TextView
+            android:id="@+id/titleTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sənəd nömrəsi"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/actionBarLyt"
+        android:layout_marginTop="20dp">
+
+        <RadioButton
+            android:id="@+id/biletBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:checked="true"
+            android:text="Şəxsiyyət vəsiqəsinin nömrəsi ilə"
+            android:textSize="16sp"/>
+
+
+        <RadioButton
+            android:id="@+id/svBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="Elektron bilet nömrəsi ilə"
+            android:textSize="16sp"/>
+
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/numberEdt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radioGroup"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="16dp"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:layout_marginRight="16dp"
+        android:text=""
+        android:hint="Şəxsiyyət vəsiqəsinin nömrəsi ilə"/>
+
+
+      <Button
+          android:id="@+id/checkBtn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/numberEdt"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="20dp"
+          android:text="YOXLA"
+          android:background="@drawable/buttton_background"
+          android:textColor="#FFFFFF"/>
+
+</RelativeLayout>
