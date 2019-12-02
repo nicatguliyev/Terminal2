@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.assist.AssistStructure;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -18,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -76,6 +79,8 @@ public class DownloadTest extends AppCompatActivity {
 
     public static final int progressType = 0;
     private static String fileUrl = "";
+    public static String deviceId = "";
+    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,30 +99,86 @@ public class DownloadTest extends AppCompatActivity {
         infolyt.setVisibility(View.GONE);
 
 
+//        SharedPreferences prefs = getSharedPreferences("PREF", MODE_PRIVATE);
+//        deviceId = prefs.getString("DEVICEID", "");
+//
+//        if(deviceId.equals("")){
+//            SharedPreferences.Editor editor = getSharedPreferences("PREF", MODE_PRIVATE).edit();
+//            editor.putString("name", "Elena");
+//        }
+
         tryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 infolyt.setVisibility(View.GONE);
                 dialog.show();
                 currentTime = Calendar.getInstance().getTime();
-                logIn();
+                checkVersion();
             }
         });
-     //   dialog.show();
 
 
-        if (ContextCompat.checkSelfPermission(DownloadTest.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
-           // Toast.makeText(DownloadTest.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
-            currentTime = Calendar.getInstance().getTime();
-            dialog.show();
-          //  new DownloadImage().execute(fileUrl);
-            logIn();
-        } else
-        {
-            requestStoragePermission();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+
+            requestReadPhoneStatePermission();
+
+        } else {
+            doPermissionGrantedStuffs();
+            if (ContextCompat.checkSelfPermission(DownloadTest.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                currentTime = Calendar.getInstance().getTime();
+                dialog.show();
+                checkVersion();
+            } else
+            {
+                requestStoragePermission();
+            }
         }
 
+    }
+
+    public void doPermissionGrantedStuffs() {
+        //Have an  object of TelephonyManager
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                //Log.i("DeviceId", String.valueOf(tm.getImei()));
+                deviceId = String.valueOf(tm.getImei());
+            }
+            else
+            {
+               // Log.i("DeviceId", String.valueOf(tm.getDeviceId()));
+                 deviceId = String.valueOf(tm.getDeviceId());
+            }
+
+        }
+
+    }
+
+
+    private void requestReadPhoneStatePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_PHONE_STATE)) {
+            new AlertDialog.Builder(DownloadTest.this)
+                    .setTitle("Permission Request")
+                    .setMessage("Allow Permission")
+                    .setCancelable(false)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //re-request
+                            ActivityCompat.requestPermissions(DownloadTest.this,
+                                    new String[]{Manifest.permission.READ_PHONE_STATE},
+                                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+                        }
+                    })
+                    .show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+        }
     }
 
     private void requestStoragePermission(){
@@ -152,24 +213,36 @@ public class DownloadTest extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 1)  {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-               // Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
-                //new DownloadImage().execute(fileUrl);
-                logIn();
+                checkVersion();
             } else {
-             //   Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
         }
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_PHONE_STATE) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    doPermissionGrantedStuffs();
+                if (ContextCompat.checkSelfPermission(DownloadTest.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    currentTime = Calendar.getInstance().getTime();
+                    dialog.show();
+                    checkVersion();
+                } else
+                {
+                    requestStoragePermission();
+                }
+
+            } else {
+                alertAlert("Permission Read_PHONE is not granted");
+            }
+        }
+
     }
 
-    private void logIn(){
+    private void checkVersion(){
          dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, updateUrl, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
                 dialog.hide();
-                Log.i("CCCCCCCCC", response);
-                Log.i("VVVVVVV", "MMMMMMMM");
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
@@ -196,7 +269,6 @@ public class DownloadTest extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Xəta baş verdi: Invalid parameter", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Log.i("JsonXeta", e.toString());
                     Toast.makeText(getApplicationContext(), "Json Error", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -212,7 +284,6 @@ public class DownloadTest extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "İnternetə bağlantıda problem var" , Toast.LENGTH_SHORT).show();
                 }
                else   if(error instanceof ServerError){
-                //    Log.i("ServerXeta", (error.networkResponse.statusCode).)
                     Toast.makeText(getApplicationContext(), "Server xətası" , Toast.LENGTH_SHORT).show();
 
                 }
@@ -343,5 +414,22 @@ public class DownloadTest extends AppCompatActivity {
             startActivity(intent);
 
         }
+
     }
+
+    private void alertAlert(String msg) {
+        new AlertDialog.Builder(DownloadTest.this)
+                .setTitle("Permission Request")
+                .setMessage(msg)
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do somthing here
+                    }
+                })
+
+                .show();
+    }
+
+
 }
