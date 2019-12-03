@@ -76,6 +76,7 @@ public class DownloadTest extends AppCompatActivity {
     SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
     RelativeLayout infolyt;
     Button tryBtn;
+    Toast toast;
 
     public static final int progressType = 0;
     private static String fileUrl = "";
@@ -277,18 +278,17 @@ public class DownloadTest extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 dialog.hide();
                 infolyt.setVisibility(VISIBLE);
-                if(error instanceof NoConnectionError){
-                    Toast.makeText(getApplicationContext(), "İnternetə qoşulmayıb." , Toast.LENGTH_SHORT).show();
+                if (error instanceof NoConnectionError) {
+                    showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 }
-               else  if(error instanceof TimeoutError){
-                    Toast.makeText(getApplicationContext(), "İnternetə bağlantıda problem var" , Toast.LENGTH_SHORT).show();
+                else if (error instanceof TimeoutError) {
+                    showToast("İnternetə bağlantıda problem var", Toast.LENGTH_SHORT);
                 }
-               else   if(error instanceof ServerError){
-                    Toast.makeText(getApplicationContext(), "Server xətası" , Toast.LENGTH_SHORT).show();
-
+                else if (error instanceof ServerError) {
+                    showToast("Server xətası", Toast.LENGTH_SHORT);
                 }
-               else {
-                    Toast.makeText(getApplicationContext(), "Bilinməyın xəta" , Toast.LENGTH_SHORT).show();
+                else{
+                    showToast("Bilinməyən xəta:" + String.valueOf(error.networkResponse.statusCode), Toast.LENGTH_SHORT);
                 }
             }
         }) {
@@ -395,7 +395,7 @@ public class DownloadTest extends AppCompatActivity {
                     }
                 });
                 e.printStackTrace();
-                Log.i("Xeta", "Xeta2");
+               // Log.i("Xeta", "Xeta2");
             }
             return null;
         }
@@ -429,6 +429,17 @@ public class DownloadTest extends AppCompatActivity {
                 })
 
                 .show();
+    }
+
+    public  void showToast(String txt, int duration){
+        if(toast != null){
+            toast.cancel();
+            toast = Toast.makeText(getApplicationContext(), txt, duration);
+            toast.show();
+        }else{
+            toast = Toast.makeText(getApplicationContext(), txt, duration);
+            toast.show();
+        }
     }
 
 

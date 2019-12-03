@@ -76,6 +76,7 @@ public class Number extends AppCompatActivity {
     ComponentName cn;
     int stationId;
     int stationIds[] = {};
+    Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,7 +203,7 @@ public class Number extends AppCompatActivity {
                 dialog.hide();
 
                 try {
-                    Log.i("TicketData", response);
+                 //   Log.i("TicketData", response);
 
                     JSONObject responseJsonObject = new JSONObject(response);
 
@@ -210,7 +211,7 @@ public class Number extends AppCompatActivity {
                     {
                         if(resultCount.equals("0")){
                             if(responseJsonObject.get("data") instanceof  JSONArray){
-                               Toast.makeText(getApplicationContext(), "Bilet tapılmadı", Toast.LENGTH_SHORT).show();
+                               showToast("Bilet tapılmadı", Toast.LENGTH_SHORT);
                                // notFoundTextView.setVisibility(View.VISIBLE);
                                 try {
                                     InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
@@ -221,7 +222,7 @@ public class Number extends AppCompatActivity {
                             }
                             else
                             {
-                                Toast.makeText(getApplicationContext(), "Invalid parametr", Toast.LENGTH_SHORT).show();
+                               showToast("Invalid paramter", Toast.LENGTH_SHORT);
                                // notFoundTextView.setVisibility(View.INVISIBLE);
                                 try {
                                     InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
@@ -235,7 +236,7 @@ public class Number extends AppCompatActivity {
                         }
                         else
                         {
-                            Log.i("Netice", responseJsonObject.getJSONObject("data").toString());
+                            //Log.i("Netice", responseJsonObject.getJSONObject("data").toString());
                             JSONObject jsonObject = responseJsonObject.getJSONObject("data");
                             JSONArray saleDataArray = jsonObject.getJSONArray("sale_data");
                             JSONObject ticketDataJsonObject = saleDataArray.getJSONObject(0);
@@ -252,10 +253,10 @@ public class Number extends AppCompatActivity {
                             saleId = String.valueOf(ticketDataJsonObject.getInt("sale_id"));
                           //  notFoundTextView.setVisibility(View.INVISIBLE);
 
-                            Log.i("HHHH", String.valueOf(trainId));
-                            Log.i("HHHH", String.valueOf(tripDate));
-                            Log.i("HHHH", String.valueOf(ticketDataJsonObject.getInt("train_id")));
-                            Log.i("HHHH", String.valueOf(ticketDataJsonObject.getString("trip_date")));
+                           // Log.i("HHHH", String.valueOf(trainId));
+                           // Log.i("HHHH", String.valueOf(tripDate));
+                          //  Log.i("HHHH", String.valueOf(ticketDataJsonObject.getInt("train_id")));
+                           // Log.i("HHHH", String.valueOf(ticketDataJsonObject.getString("trip_date")));
 
                                    if(trainId != ticketDataJsonObject.getInt("train_id") || !tripDate.equals(ticketDataJsonObject.getString("trip_date"))){
 
@@ -299,7 +300,7 @@ public class Number extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Xəta: Json Error", Toast.LENGTH_SHORT).show();
+                    showToast("Json Error", Toast.LENGTH_SHORT);
                    // notFoundTextView.setVisibility(View.INVISIBLE);
                 }
             }
@@ -308,17 +309,18 @@ public class Number extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 dialog.hide();
 
+
                 if (error instanceof NoConnectionError) {
-                    Toast.makeText(getApplicationContext(), "İnternetə qoşulmayıb.", Toast.LENGTH_SHORT).show();
+                    showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 }
                 else if (error instanceof TimeoutError) {
-                    Toast.makeText(getApplicationContext(), "İnternetə bağlantıda problem var", Toast.LENGTH_SHORT).show();
+                    showToast("İnternetə bağlantıda problem var", Toast.LENGTH_SHORT);
                 }
                 else if (error instanceof ServerError) {
-                    Toast.makeText(getApplicationContext(), "Server xətası", Toast.LENGTH_SHORT).show();
+                    showToast("Server xətası", Toast.LENGTH_SHORT);
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "Bilinməyən xəta", Toast.LENGTH_SHORT).show();
+                    showToast("Bilinməyən xəta:" + String.valueOf(error.networkResponse.statusCode), Toast.LENGTH_SHORT);
                 }
 
             }
@@ -354,22 +356,23 @@ public class Number extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 dialog.hide();
-                Log.i("ConfirmMessage", response);
+               // Log.i("ConfirmMessage", response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String result = jsonObject.getString("result");
                     if(result.equals("0")){
-                        Toast.makeText(getApplicationContext(), "Xəta: Bilet təsdiq edilmədi.", Toast.LENGTH_SHORT).show();
+                        showToast("Xəta: Bilet təsdiq edilmədi", Toast.LENGTH_SHORT);
                     }
                     else
                     {
-                        Toast.makeText(getApplicationContext(), "Bilet təsdiq edildi", Toast.LENGTH_SHORT).show();
+                        showToast("Bilet təsdiq edildi", Toast.LENGTH_SHORT);
+
                         dialog.hide();
                         checkDialog.hide();
 
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(getApplicationContext(), "Confirm Json Error", Toast.LENGTH_SHORT).show();
+                    showToast("Confirm Json Error", Toast.LENGTH_SHORT);
                     e.printStackTrace();
                 }
             }
@@ -377,19 +380,17 @@ public class Number extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 dialog.hide();
-
                 if (error instanceof NoConnectionError) {
-                    Toast.makeText(getApplicationContext(), "Bilet təsdiq edilmədi. İnternetə qoşulmayıb.", Toast.LENGTH_SHORT).show();
-                }
-                else if (error instanceof TimeoutError) {
-                    Toast.makeText(getApplicationContext(), "Bilet təsdiq edilmədi. İnternetə bağlantıda problem var", Toast.LENGTH_SHORT).show();
-                }
-                else if (error instanceof ServerError) {
-                    Toast.makeText(getApplicationContext(), "Bilet təsdiq edilmədi. Server xətası", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "Bilet təsdiq edilmədi. Bilinməyən xəta", Toast.LENGTH_SHORT).show();
+                    showToast("Bilet təsdiq edilmədi. İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
+                } else if (error instanceof TimeoutError) {
+                    showToast("Bilet təsdiq edilmədi. İnternetə bağlantıda problem var", Toast.LENGTH_SHORT);
+
+                } else if (error instanceof ServerError) {
+                    showToast("Bilet təsdiq edilmədi. Server xətası", Toast.LENGTH_SHORT);
+
+                } else {
+                    showToast("Bilet təsdiq edilmədi. Bilinməyən xəta", Toast.LENGTH_SHORT);
+
                 }
             }
         }) {
@@ -449,5 +450,17 @@ public class Number extends AppCompatActivity {
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
+    public  void showToast(String txt, int duration){
+        if(toast != null){
+            toast.cancel();
+            toast = Toast.makeText(getApplicationContext(), txt, duration);
+            toast.show();
+        }else{
+            toast = Toast.makeText(getApplicationContext(), txt, duration);
+            toast.show();
+        }
+    }
+
 
 }

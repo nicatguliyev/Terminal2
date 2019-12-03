@@ -77,6 +77,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
     Button testBtn;
     EditText edt;
     int[] stationIds = {};
+    Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
         stationId = getIntent().getIntExtra("StationId", 0);
         stationIds = getIntent().getIntArrayExtra("stationIds");
 
-        Log.i("SttionId", String.valueOf(stationIds[0]));
+      //  Log.i("SttionId", String.valueOf(stationIds[0]));
 
         titleTxt.setText(trainName + ",  Vaqon " + wagonNo);
 
@@ -244,19 +245,18 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                         getTicketDetailsFromQR();
 
                     } catch (UnsupportedEncodingException e) {
-                        Toast.makeText(getApplicationContext(), "Encoding Error", Toast.LENGTH_SHORT).show();
+                       showToast("Encoding Error", Toast.LENGTH_SHORT);
                         e.printStackTrace();
-
                     } catch (JSONException e) {
-                        Toast.makeText(getApplicationContext(), "Barcode Json Converting Error", Toast.LENGTH_SHORT).show();
+                        showToast("Barcode Json Converting Error", Toast.LENGTH_SHORT);
                         e.printStackTrace();
                     } catch (StringIndexOutOfBoundsException e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "QrCode data length error", Toast.LENGTH_SHORT).show();
+                        showToast("QRCode Data Length Error", Toast.LENGTH_SHORT);
                     } catch (Exception e) {
                         Log.i("Xeta", e.toString());
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Bilinməyən xəta", Toast.LENGTH_SHORT).show();
+                        showToast("Bilinməyən xəta", Toast.LENGTH_SHORT);
                     }
 
                 }
@@ -357,13 +357,13 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                     {
                         if (resultCount.equals("0")) {
                             if (responseJsonObject.get("data") instanceof JSONArray) {
-                                Toast.makeText(getApplicationContext(), "Bilet tapılmadı", Toast.LENGTH_SHORT).show();
+                                showToast("Bilet tapılmadı", Toast.LENGTH_SHORT);
                             } else {
-                                Toast.makeText(getApplicationContext(), "Invalid parametr", Toast.LENGTH_SHORT).show();
+                                showToast("Invalid Parameter", Toast.LENGTH_SHORT);
                             }
 
                         } else {
-                            Log.i("Netice", responseJsonObject.getJSONObject("data").toString());
+                           // Log.i("Netice", responseJsonObject.getJSONObject("data").toString());
                             JSONObject jsonObject = responseJsonObject.getJSONObject("data");
                             JSONArray saleDataArray = jsonObject.getJSONArray("sale_data");
                             JSONObject ticketDataJsonObject = saleDataArray.getJSONObject(0);
@@ -415,7 +415,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                 } catch (JSONException e) {
                     e.printStackTrace();
                     //Log.i("JSONXETA", e.toString());
-                    Toast.makeText(getApplicationContext(), "Json Error", Toast.LENGTH_SHORT).show();
+                    showToast("Json Error", Toast.LENGTH_SHORT);
                 }
             }
         }, new Response.ErrorListener() {
@@ -424,13 +424,16 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                 dialog.hide();
 
                 if (error instanceof NoConnectionError) {
-                    Toast.makeText(getApplicationContext(), "İnternetə qoşulmayıb.", Toast.LENGTH_SHORT).show();
+                    showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 }
-                if (error instanceof TimeoutError) {
-                    Toast.makeText(getApplicationContext(), "İnternetə bağlantıda problem var", Toast.LENGTH_SHORT).show();
+                else if (error instanceof TimeoutError) {
+                    showToast("İnternetə bağlantıda problem var", Toast.LENGTH_SHORT);
                 }
-                if (error instanceof ServerError) {
-                    Toast.makeText(getApplicationContext(), "Server xətası", Toast.LENGTH_SHORT).show();
+                else if (error instanceof ServerError) {
+                    showToast("Server xətası", Toast.LENGTH_SHORT);
+                }
+                else{
+                    showToast("Bilinməyən xəta:" + String.valueOf(error.networkResponse.statusCode), Toast.LENGTH_SHORT);
                 }
             }
         }) {
@@ -470,12 +473,12 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                     {
                         if (resultCount.equals("0")) {
                             if (responseJsonObject.get("data") instanceof JSONArray) {
-                                Toast.makeText(getApplicationContext(), "Bilet tapılmadı", Toast.LENGTH_SHORT).show();
+                                showToast("Bilet tapılmadı", Toast.LENGTH_SHORT);
                             } else {
-                                Toast.makeText(getApplicationContext(), "Invalid parametr", Toast.LENGTH_SHORT).show();
+                                showToast("Invalid Parameter", Toast.LENGTH_SHORT);
                             }
                         } else {
-                            Log.i("Netice", responseJsonObject.getJSONObject("data").toString());
+                           // Log.i("Netice", responseJsonObject.getJSONObject("data").toString());
                             JSONObject jsonObject = responseJsonObject.getJSONObject("data");
                             JSONArray saleDataArray = jsonObject.getJSONArray("sale_data");
                             JSONObject ticketDataJsonObject = saleDataArray.getJSONObject(0);
@@ -530,25 +533,24 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                 } catch (JSONException e) {
                     e.printStackTrace();
                   //  Log.i("JSONXETA", e.toString());
-                    Toast.makeText(getApplicationContext(), "Json Error", Toast.LENGTH_SHORT).show();
+                    showToast("Json Error", Toast.LENGTH_SHORT);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 dialog.hide();
-
                 if (error instanceof NoConnectionError) {
-                    Toast.makeText(getApplicationContext(), "İnternetə qoşulmayıb.", Toast.LENGTH_SHORT).show();
+                    showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 }
-              else  if (error instanceof TimeoutError) {
-                    Toast.makeText(getApplicationContext(), "İnternetə bağlantıda problem var", Toast.LENGTH_SHORT).show();
+                else if (error instanceof TimeoutError) {
+                    showToast("İnternetə bağlantıda problem var", Toast.LENGTH_SHORT);
                 }
-               else  if (error instanceof ServerError) {
-                    Toast.makeText(getApplicationContext(), "Server xətası", Toast.LENGTH_SHORT).show();
+                else if (error instanceof ServerError) {
+                    showToast("Server xətası", Toast.LENGTH_SHORT);
                 }
-               else{
-                    Toast.makeText(getApplicationContext(), "Bilinməyən xəta: " + String.valueOf(error.networkResponse.statusCode), Toast.LENGTH_SHORT).show();
+                else{
+                    showToast("Bilinməyən xəta:" + String.valueOf(error.networkResponse.statusCode), Toast.LENGTH_SHORT);
                 }
             }
         }) {
@@ -588,15 +590,15 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                     JSONObject jsonObject = new JSONObject(response);
                     String result = jsonObject.getString("result");
                     if (result.equals("0")) {
-                        Toast.makeText(getApplicationContext(), "Xəta: Bilet təsdiq edilmədi.", Toast.LENGTH_SHORT).show();
+                        showToast("Xəta: Bilet təsdiq edilmədi", Toast.LENGTH_SHORT);
                     } else {
-                        Toast.makeText(getApplicationContext(), "Bilet təsdiq edildi", Toast.LENGTH_SHORT).show();
+                        showToast("Bilet təsdiq edildi", Toast.LENGTH_SHORT);
                         dialog.hide();
                         checkDialog.hide();
 
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(getApplicationContext(), "Confirm Json Error", Toast.LENGTH_SHORT).show();
+                    showToast("Confirm Json Error", Toast.LENGTH_SHORT);
                     e.printStackTrace();
                 }
             }
@@ -606,13 +608,16 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                 dialog.hide();
 
                 if (error instanceof NoConnectionError) {
-                    Toast.makeText(getApplicationContext(), "Bilet təsdiq edilmədi. İnternetə qoşulmayıb.", Toast.LENGTH_SHORT).show();
+                    showToast("Bilet təsdiq edilmədi. İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 } else if (error instanceof TimeoutError) {
-                    Toast.makeText(getApplicationContext(), "Bilet təsdiq edilmədi. İnternetə bağlantıda problem var", Toast.LENGTH_SHORT).show();
+                    showToast("Bilet təsdiq edilmədi. İnternetə bağlantıda problem var", Toast.LENGTH_SHORT);
+
                 } else if (error instanceof ServerError) {
-                    Toast.makeText(getApplicationContext(), "Bilet təsdiq edilmədi. Server xətası", Toast.LENGTH_SHORT).show();
+                    showToast("Bilet təsdiq edilmədi. Server xətası", Toast.LENGTH_SHORT);
+
                 } else {
-                    Toast.makeText(getApplicationContext(), "Bilet təsdiq edilmədi. Bilinməyən xəta", Toast.LENGTH_SHORT).show();
+                    showToast("Bilet təsdiq edilmədi. Bilinməyən xəta", Toast.LENGTH_SHORT);
+
                 }
             }
         }) {
@@ -669,5 +674,16 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
         //  zXingScannerView.resumeCameraPreview(this);
         zXingScannerView.stopCamera();
         // setContentView(R.layout.activity_options);
+    }
+
+    public  void showToast(String txt, int duration){
+        if(toast != null){
+            toast.cancel();
+            toast = Toast.makeText(getApplicationContext(), txt, duration);
+            toast.show();
+        }else{
+            toast = Toast.makeText(getApplicationContext(), txt, duration);
+            toast.show();
+        }
     }
 }

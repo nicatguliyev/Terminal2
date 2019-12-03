@@ -55,6 +55,7 @@ public class Login extends AppCompatActivity {
     SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
     public static int userId;
     private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 0;
+    Toast toast;
 
 
     @Override
@@ -69,6 +70,10 @@ public class Login extends AppCompatActivity {
         dialog = new ProgressDialog(Login.this);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setMessage("Zəhmət olmasa gözləyin..");
+
+//        toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+//        toast.show();
+//        toast.cancel();
 
 
       //  TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -181,7 +186,7 @@ public class Login extends AppCompatActivity {
                  try {
                      JSONObject jsonObject = new JSONObject(response);
                      if(jsonObject.getString("result").equals("0")){
-                         Toast.makeText(getApplicationContext(), "Xeta bas verdi", Toast.LENGTH_SHORT).show();
+                             showToast("Xəta baş verdi", Toast.LENGTH_SHORT);
                      }
                      else
                      {
@@ -194,7 +199,7 @@ public class Login extends AppCompatActivity {
                           overridePendingTransition(R.anim.come_from_right, R.anim.exit_from_left);
                      }
                  } catch (JSONException e) {
-                     Toast.makeText(getApplicationContext(), "Json Error", Toast.LENGTH_SHORT).show();
+                     showToast("Json Error", Toast.LENGTH_SHORT);
                  }
              }
          }, new Response.ErrorListener() {
@@ -202,13 +207,13 @@ public class Login extends AppCompatActivity {
              public void onErrorResponse(VolleyError error) {
                  dialog.hide();
                  if(error instanceof NoConnectionError){
-                     Toast.makeText(getApplicationContext(), "İnternetə qoşulmayıb." , Toast.LENGTH_SHORT).show();
+                     showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                  }
                  if(error instanceof TimeoutError){
-                     Toast.makeText(getApplicationContext(), "İnternetə bağlantıda problem var" , Toast.LENGTH_SHORT).show();
+                     showToast("İnternetə bağlantıda problem var", Toast.LENGTH_SHORT);
                  }
                  if(error instanceof ServerError){
-                     Toast.makeText(getApplicationContext(), "Server xətası" , Toast.LENGTH_SHORT).show();
+                     showToast("Server xətası", Toast.LENGTH_SHORT);
 
                  }
              }
@@ -250,5 +255,16 @@ public class Login extends AppCompatActivity {
             e1.printStackTrace();
         }
         return password;
+    }
+
+    public  void showToast(String txt, int duration){
+        if(toast != null){
+            toast.cancel();
+            toast = Toast.makeText(getApplicationContext(), txt, duration);
+            toast.show();
+        }else{
+            toast = Toast.makeText(getApplicationContext(), txt, duration);
+            toast.show();
+        }
     }
 }
