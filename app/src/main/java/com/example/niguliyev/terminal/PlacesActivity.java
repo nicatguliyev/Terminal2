@@ -3,6 +3,7 @@ package com.example.niguliyev.terminal;
 import android.app.ProgressDialog;
 import android.app.SearchableInfo;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,7 +40,7 @@ import java.util.Map;
 
 public class PlacesActivity extends AppCompatActivity {
 
-    Button backBtn, umumiBtn, elekBtn, standartBtn, bosBtn, seePlacesBtn;
+    Button backBtn, umumiBtn, elekBtn, standartBtn, bosBtn, seePlacesBtn, refreshBtn;
     ProgressDialog dialog;
     String serviceUrl = "https://ticket.ady.az/terminal_service.php";
     String wagonNo = "";
@@ -54,6 +55,7 @@ public class PlacesActivity extends AppCompatActivity {
     int checkedSSaleCount = 0;
     public static  ArrayList<SeatModel> allSeatsList = new ArrayList<>();
     TextView titleTxt;
+    Toast toast;
   //  public static ArrayList<SeatModel> eSeatsList = new ArrayList<>();
  //   public static ArrayList<SeatModel> sSeatsList = new ArrayList<>();
 
@@ -70,11 +72,13 @@ public class PlacesActivity extends AppCompatActivity {
         bosBtn = findViewById(R.id.bosBtn);
         seePlacesBtn = findViewById(R.id.seePlacesBtn);
         titleTxt = findViewById(R.id.titleTxt);
+        refreshBtn = findViewById(R.id.reloadBtn);
         allSeatsList = new ArrayList<>();
 
         dialog = new ProgressDialog(PlacesActivity.this);
         dialog.setMessage("Zəhmət olmasa gözləyin..");
         dialog.setCanceledOnTouchOutside(false);
+      //  dialog.show();
 
         wagonNo = getIntent().getStringExtra("wagonNo");
         tripDate = getIntent().getStringExtra("tripDate");
@@ -82,10 +86,6 @@ public class PlacesActivity extends AppCompatActivity {
         trainName = getIntent().getStringExtra("trainName");
 
         titleTxt.setText(trainName + ",  Vaqon " + wagonNo);
-
-        currentTime = Calendar.getInstance().getTime();
-        reqDate = sdf.format(currentTime);
-        getWagonStatus();
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,22 +95,59 @@ public class PlacesActivity extends AppCompatActivity {
             }
         });
 
+        currentTime = Calendar.getInstance().getTime();
+        reqDate = sdf.format(currentTime);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getWagonStatus();
+            }
+        }, 100);
+
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               getWagonStatus();
+            }
+        });
+
         seePlacesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PlacesActivity.this, PlacesGridActivity.class);
-                intent.putExtra("trainName", trainName);
-                intent.putExtra("wagonNo", wagonNo);
-                intent.putExtra("trainId", String.valueOf(trainId));
-                intent.putExtra("tripDate", tripDate);
 
-                startActivity(intent);
+                if(allSeatsList.size() == 0){
+                    showToast("Məlumatlar yüklənməyib. Səhifəni yeniləyin", Toast.LENGTH_LONG);
+                }
+                else
+                {
+                    Intent intent = new Intent(PlacesActivity.this, PlacesGridActivity.class);
+                    intent.putExtra("trainName", trainName);
+                    intent.putExtra("wagonNo", wagonNo);
+                    intent.putExtra("trainId", String.valueOf(trainId));
+                    intent.putExtra("tripDate", tripDate);
+
+                    startActivity(intent);
+                }
+
             }
         });
     }
 
     public void getWagonStatus(){
         dialog.show();
+
+        umumiBtn.setText("---");
+        bosBtn.setText("---");
+        standartBtn.setText("-- / --");
+        elekBtn.setText("-- / --");
+        allPlaceCount = 0;
+        freeSeatsCount = 0;
+        eSaleCount = 0;
+        sSaleCount = 0;
+        checkedESaleCount = 0;
+        checkedSSaleCount = 0;
+        allSeatsList.clear();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serviceUrl, new Response.Listener<String>() {
 
@@ -175,20 +212,25 @@ public class PlacesActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+//                try {
+//                    Thread.sleep(1000);
+//                }
+//                catch (Exception E){
+//                    E.printStackTrace();
+//                }
                 dialog.hide();
 
                 if (error instanceof NoConnectionError) {
-                    Toast.makeText(getApplicationContext(), "İnternetə qoşulmayıb.", Toast.LENGTH_SHORT).show();
+                    showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 }
                 else if (error instanceof TimeoutError) {
-                    Toast.makeText(getApplicationContext(), "İnternetə bağlantıda problem var", Toast.LENGTH_SHORT).show();
+                    showToast("İnternetə bağlantıda problem var", Toast.LENGTH_SHORT);
                 }
                 else if (error instanceof ServerError) {
-                    Toast.makeText(getApplicationContext(), "Server xətası", Toast.LENGTH_SHORT).show();
+                    showToast("Server xətası", Toast.LENGTH_SHORT);
                 }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "Bilinməyən xəta", Toast.LENGTH_SHORT).show();
+                else{
+                    showToast("Bilinməyən xəta:" + String.valueOf(error.networkResponse.statusCode), Toast.LENGTH_SHORT);
                 }
 
             }
@@ -229,6 +271,17 @@ public class PlacesActivity extends AppCompatActivity {
             e1.printStackTrace();
         }
         return password;
+    }
+
+    public  void showToast(String txt, int duration){
+        if(toast != null){
+            toast.cancel();
+            toast = Toast.makeText(getApplicationContext(), txt, duration);
+            toast.show();
+        }else{
+            toast = Toast.makeText(getApplicationContext(), txt, duration);
+            toast.show();
+        }
     }
 
 }

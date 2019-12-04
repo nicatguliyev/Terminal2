@@ -44,6 +44,27 @@
             android:textColor="#ffffff"
             android:textSize="16sp" />
 
+        <Button
+            android:id="@+id/reloadBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:textColor="#fff"
+            android:layout_marginRight="6dp"
+            android:background="#00ff4455"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="#00ff4455"
+            android:layout_marginRight="6dp"
+            android:src="@drawable/refresh"
+            android:padding="10dp"
+            android:paddingRight="20dp"/>
+
     </RelativeLayout>
 
     <TextView
