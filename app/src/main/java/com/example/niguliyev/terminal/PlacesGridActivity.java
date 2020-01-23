@@ -209,11 +209,11 @@ public class PlacesGridActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                String token = convertPassMd5(convertPassMd5(String.valueOf(Login.userId) + trainId + tripDate + wagonNo + selectedSeat + "123456789" + reqDate));
+                String token = convertPassMd5(convertPassMd5(String.valueOf(Login.userId) + trainId + tripDate + wagonNo + selectedSeat + DownloadTest.deviceId + reqDate));
                 params.put("action", "get_seat_info");
                 params.put("secure_code", "t1e2r3m4i5n6a7l8");
                 params.put("user_id", String.valueOf(Login.userId));
-                params.put("terminal_id", "123456789");
+                params.put("terminal_id", DownloadTest.deviceId);
                 params.put("train_id", trainId);
                 params.put("trip_date", tripDate);
                 params.put("request_dt", reqDate);

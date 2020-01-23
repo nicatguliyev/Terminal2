@@ -444,7 +444,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                 params.put("action", "check_e_ticket");
                 params.put("secure_code", "t1e2r3m4i5n6a7l8");
                 params.put("user_id", String.valueOf(Login.userId));
-                params.put("terminal_id", "123456789");
+                params.put("terminal_id", DownloadTest.deviceId);
                 params.put("passenger_passport_no", pass_no);
                 params.put("sale_id", saleId);
                 params.put("request_dt", reqDate);
@@ -561,7 +561,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                 params.put("action", "check_standart_ticket");
                 params.put("secure_code", "t1e2r3m4i5n6a7l8");
                 params.put("user_id", String.valueOf(Login.userId));
-                params.put("terminal_id", "123456789");
+                params.put("terminal_id", DownloadTest.deviceId);
                 params.put("ticket_no_barcode", ticketNo);
                 params.put("train_id", String.valueOf(trainId));
                 params.put("trip_date", tripDate);
@@ -624,11 +624,11 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                String token = convertPassMd5(convertPassMd5(String.valueOf(Login.userId) + saleId + "123456789" + reqDate));
+                String token = convertPassMd5(convertPassMd5(String.valueOf(Login.userId) + saleId + DownloadTest.deviceId + reqDate));
                 params.put("action", "ticket_checkin");
                 params.put("secure_code", "t1e2r3m4i5n6a7l8");
                 params.put("user_id", String.valueOf(Login.userId));
-                params.put("terminal_id", "123456789");
+                params.put("terminal_id", DownloadTest.deviceId);
                 params.put("sale_id", saleId);
                 params.put("request_dt", reqDate);
                 params.put("token", token);

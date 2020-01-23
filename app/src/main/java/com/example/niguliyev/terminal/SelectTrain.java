@@ -250,12 +250,12 @@ public class SelectTrain extends AppCompatActivity  {
             protected Map<String, String> getParams() {
 
                 String reqDate = sdf.format(currentTime);
-                String token = convertPassMd5(convertPassMd5(String.valueOf(Login.userId) + "123456789" + reqDate));
+                String token = convertPassMd5(convertPassMd5(String.valueOf(Login.userId) + DownloadTest.deviceId + reqDate));
                 Map<String, String> params = new HashMap<>();
                 params.put("action", "get_train_trip");
                 params.put("secure_code", "t1e2r3m4i5n6a7l8");
                 params.put("user_id", String.valueOf(Login.userId));
-                params.put("terminal_id", "123456789");
+                params.put("terminal_id", DownloadTest.deviceId);
                 params.put("request_dt", reqDate);
                 params.put("token", token);
 
@@ -358,13 +358,13 @@ public class SelectTrain extends AppCompatActivity  {
                 trainId = trainModels.get(trainSpinner.getSelectedItemPosition() -1).getTrainId();
                 tripDate = trainModels.get(trainSpinner.getSelectedItemPosition() - 1).getTripDate();
                 String reqDate = sdf.format(currentTime);
-                String token = convertPassMd5(convertPassMd5(String.valueOf(Login.userId) + String.valueOf(trainId) + tripDate + "123456789" + reqDate));
+                String token = convertPassMd5(convertPassMd5(String.valueOf(Login.userId) + String.valueOf(trainId) + tripDate + DownloadTest.deviceId + reqDate));
                // Log.i("Melumatlar", reqDate + " " + token);
                 Map<String, String> params = new HashMap<>();
                 params.put("action", "get_wagon_e");
                 params.put("secure_code", "t1e2r3m4i5n6a7l8");
                 params.put("user_id", "1");
-                params.put("terminal_id", "123456789");
+                params.put("terminal_id", DownloadTest.deviceId);
                 params.put("train_id", String.valueOf(trainId));
                 params.put("trip_date", tripDate);
                 params.put("request_dt", reqDate);

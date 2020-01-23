@@ -295,12 +295,12 @@ public class DownloadTest extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 String reqDate = sdf.format(currentTime);
-                String token = convertPassMd5(convertPassMd5("1"+"123456789"+reqDate));
+                String token = convertPassMd5(convertPassMd5("1"+deviceId+reqDate));
                 Map<String, String> params = new HashMap<>();
                 params.put("action", "t_version_control");
                 params.put("soft_id", "1");
                 params.put("secure_code", "t1e2r3m4i5n6a7l8");
-                params.put("terminal_id", "123456789");
+                params.put("terminal_id", deviceId);
                 params.put("request_dt", reqDate);
                 params.put("token", token);
 

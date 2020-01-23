@@ -222,13 +222,13 @@ public class Login extends AppCompatActivity {
              protected Map<String, String> getParams() {
 
                  String reqDate = sdf.format(currentTime);
-                 String token = convertPassMd5(convertPassMd5("r.askerov"+"123456"+"123456789"+reqDate));
+                 String token = convertPassMd5(convertPassMd5( userEdt.getText().toString()+ passEdt.getText().toString()+DownloadTest.deviceId+reqDate));
                  Map<String, String> params = new HashMap<>();
                  params.put("action", "t_user_login");
                  params.put("secure_code", "t1e2r3m4i5n6a7l8");
                  params.put("user_name", userEdt.getText().toString());
                  params.put("password", passEdt.getText().toString());
-                 params.put("terminal_id", "123456789");
+                 params.put("terminal_id", DownloadTest.deviceId);
                  params.put("request_dt", reqDate);
                  params.put("token", token);
 
