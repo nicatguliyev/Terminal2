@@ -71,7 +71,7 @@ public class DateListAdapter extends BaseAdapter {
 
         if(position == dates.size())
         {
-            bottomView.setVisibility(View.INVISIBLE);
+            bottomView.setVisibility(View.INVISIBLE);//
 
         }
         else

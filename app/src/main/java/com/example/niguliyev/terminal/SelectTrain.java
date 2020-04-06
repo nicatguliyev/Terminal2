@@ -435,7 +435,7 @@ public class SelectTrain extends AppCompatActivity  {
                 .show();
     }
 
-    public  void showToast(String txt, int duration){
+    public  void showToast(String txt, int duration){//
         if(toast != null){
             toast.cancel();
             toast = Toast.makeText(getApplicationContext(), txt, duration);

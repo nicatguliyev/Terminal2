@@ -23,7 +23,7 @@ public class PlaceGridAdapter extends BaseAdapter {
     public PlaceGridAdapter(Context context, ArrayList<SeatModel> seatModels){
         this.context = context;
         this.seatModels = seatModels;
-    }
+    }//
 
     @Override
     public int getCount() {

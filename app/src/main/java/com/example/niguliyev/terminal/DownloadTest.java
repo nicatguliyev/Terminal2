@@ -242,7 +242,7 @@ public class DownloadTest extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, updateUrl, new Response.Listener<String>() {
 
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response) {//
                 dialog.dismiss();
                 try {
 

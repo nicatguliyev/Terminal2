@@ -78,7 +78,7 @@ public class TrainListAdapter extends BaseAdapter {
 
         TextView trainName = convertView.findViewById(R.id.trainName);
         View bottomView = convertView.findViewById(R.id.bottomView);
-        ImageView dropImage = convertView.findViewById(R.id.dropImage);
+        ImageView dropImage = convertView.findViewById(R.id.dropImage);//
 
         if(position == trains.size())
         {

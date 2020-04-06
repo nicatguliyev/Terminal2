@@ -276,7 +276,7 @@ public class PlacesActivity extends AppCompatActivity {
             toast.show();
         }else{
             toast = Toast.makeText(getApplicationContext(), txt, duration);
-            toast.show();
+            toast.show();//
         }
     }
 

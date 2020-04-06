@@ -36,7 +36,7 @@ public class WagonListAdapter extends BaseAdapter {
     @Override
     public Object getItem(int i) {
         return null;
-    }
+    }//
 
     @Override
     public long getItemId(int i) {

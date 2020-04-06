@@ -698,7 +698,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
             toast = Toast.makeText(getApplicationContext(), txt, duration);
             toast.show();
         }
-    }
+    }//
 
     @Override
     protected void onDestroy() {

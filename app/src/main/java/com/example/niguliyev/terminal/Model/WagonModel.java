@@ -24,7 +24,7 @@ public class WagonModel {
 
     public int getWagon_id() {
         return wagon_id;
-    }
+    } //
 
     public void setWagon_id(int wagon_id) {
         this.wagon_id = wagon_id;
