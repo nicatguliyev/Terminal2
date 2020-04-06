@@ -6,9 +6,11 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -143,7 +145,9 @@ public class Number extends AppCompatActivity {
         closeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkDialog.dismiss();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
             }
         });
 
@@ -200,7 +204,9 @@ public class Number extends AppCompatActivity {
 
             @Override
             public void onResponse(String response) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
 
                 try {
                  //   Log.i("TicketData", response);
@@ -307,7 +313,9 @@ public class Number extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
 
 
                 if (error instanceof NoConnectionError) {
@@ -355,7 +363,9 @@ public class Number extends AppCompatActivity {
 
             @Override
             public void onResponse(String response) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
                // Log.i("ConfirmMessage", response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
@@ -367,8 +377,10 @@ public class Number extends AppCompatActivity {
                     {
                         showToast("Bilet təsdiq edildi", Toast.LENGTH_SHORT);
 
-                        dialog.hide();
-                        checkDialog.hide();
+                        if(dialog != null && dialog.isShowing()){
+                            dialog.dismiss();
+                        }
+                        checkDialog.dismiss();
 
                     }
                 } catch (JSONException e) {
@@ -379,7 +391,9 @@ public class Number extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 if (error instanceof NoConnectionError) {
                     showToast("Bilet təsdiq edilmədi. İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 } else if (error instanceof TimeoutError) {
@@ -461,6 +475,29 @@ public class Number extends AppCompatActivity {
             toast.show();
         }
     }
+
+    protected void onResume() {
+        //   finish();
+        // Log.i("RRRRRRR", "RRRRR");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        int lastTimeStarted = settings.getInt("last_time_started", -1);
+        Calendar calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_YEAR);
+        // Log.i("RRRRRRR", String.valueOf(today));
+
+        if (today != lastTimeStarted) {
+            finish();
+        }
+
+        super.onResume();
+    }
+
+    protected void onDestroy() {
+        dialog.dismiss();
+        checkDialog.dismiss();
+        super.onDestroy();
+    }
+
 
 
 }

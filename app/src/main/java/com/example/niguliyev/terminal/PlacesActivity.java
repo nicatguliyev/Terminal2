@@ -3,7 +3,9 @@ package com.example.niguliyev.terminal;
 import android.app.ProgressDialog;
 import android.app.SearchableInfo;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -212,12 +214,6 @@ public class PlacesActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                try {
-//                    Thread.sleep(1000);
-//                }
-//                catch (Exception E){
-//                    E.printStackTrace();
-//                }
                 dialog.hide();
 
                 if (error instanceof NoConnectionError) {
@@ -284,4 +280,26 @@ public class PlacesActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        dialog.dismiss();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        //   finish();
+        // Log.i("RRRRRRR", "RRRRR");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        int lastTimeStarted = settings.getInt("last_time_started", -1);
+        Calendar calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_YEAR);
+        // Log.i("RRRRRRR", String.valueOf(today));
+
+        if (today != lastTimeStarted) {
+            finish();
+        }
+
+        super.onResume();
+    }
 }

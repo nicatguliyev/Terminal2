@@ -2,8 +2,10 @@ package com.example.niguliyev.terminal;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -243,5 +245,28 @@ public class PlacesGridActivity extends AppCompatActivity {
             e1.printStackTrace();
         }
         return password;
+    }
+
+    @Override
+    protected void onDestroy() {
+        dialog.dismiss();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        //   finish();
+        // Log.i("RRRRRRR", "RRRRR");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        int lastTimeStarted = settings.getInt("last_time_started", -1);
+        Calendar calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_YEAR);
+        // Log.i("RRRRRRR", String.valueOf(today));
+
+        if (today != lastTimeStarted) {
+            finish();
+        }
+
+        super.onResume();
     }
 }

@@ -6,8 +6,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -69,7 +71,7 @@ public class Login extends AppCompatActivity {
 
         dialog = new ProgressDialog(Login.this);
         dialog.setCanceledOnTouchOutside(false);
-        dialog.setMessage("Zəhmət olmasa gözləyin..");
+        dialog.setMessage("Zəhmət olmasa gözləyin...");
 
 //        toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
 //        toast.show();
@@ -181,7 +183,8 @@ public class Login extends AppCompatActivity {
 
              @Override
              public void onResponse(String response) {
-                     dialog.hide();
+                 Log.i("nnnn", response);
+                     dialog.dismiss();
 
                  try {
                      JSONObject jsonObject = new JSONObject(response);
@@ -190,10 +193,21 @@ public class Login extends AppCompatActivity {
                      }
                      else
                      {
+                          //dialog.dismiss();
                           JSONArray jsonArray = jsonObject.getJSONArray("data");
                           JSONObject jsonObject1 = jsonArray.getJSONObject(0);
                           userId = jsonObject1.getInt("user_id");
-                          finish();
+
+                          SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                          Calendar calendar = Calendar.getInstance();
+                          int today = calendar.get(Calendar.DAY_OF_YEAR);
+                          SharedPreferences.Editor editor = settings.edit();
+                          editor.putInt("last_time_started", today);
+                          editor.commit();
+                          userEdt.setText("");
+                          passEdt.setText("");
+
+                        //  finish();         // Diqqet
                           Intent i = new Intent(Login.this, SelectTrain.class);
                           startActivity(i);
                           overridePendingTransition(R.anim.come_from_right, R.anim.exit_from_left);
@@ -205,7 +219,7 @@ public class Login extends AppCompatActivity {
          }, new Response.ErrorListener() {
              @Override
              public void onErrorResponse(VolleyError error) {
-                 dialog.hide();
+                 dialog.dismiss();
                  if(error instanceof NoConnectionError){
                      showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                  }
@@ -267,4 +281,5 @@ public class Login extends AppCompatActivity {
             toast.show();
         }
     }
+
 }

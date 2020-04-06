@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -345,7 +347,9 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
 
             @Override
             public void onResponse(String response) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
 
                 Log.i("TicketData", response);
                 try {
@@ -421,8 +425,9 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                dialog.hide();
-
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 if (error instanceof NoConnectionError) {
                     showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 }
@@ -464,7 +469,9 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
 
             @Override
             public void onResponse(String response) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
 
                 try {
                     JSONObject responseJsonObject = new JSONObject(response);
@@ -539,7 +546,9 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 if (error instanceof NoConnectionError) {
                     showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 }
@@ -584,8 +593,10 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
 
             @Override
             public void onResponse(String response) {
-                dialog.hide();
-                Log.i("ConfirmMessage", response);
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
+               // Log.i("ConfirmMessage", response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String result = jsonObject.getString("result");
@@ -593,8 +604,8 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                         showToast("Xəta: Bilet təsdiq edilmədi", Toast.LENGTH_SHORT);
                     } else {
                         showToast("Bilet təsdiq edildi", Toast.LENGTH_SHORT);
-                        dialog.hide();
-                        checkDialog.hide();
+                       // dialog.hide();
+                        checkDialog.dismiss();
 
                     }
                 } catch (JSONException e) {
@@ -605,7 +616,9 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
 
                 if (error instanceof NoConnectionError) {
                     showToast("Bilet təsdiq edilmədi. İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
@@ -685,5 +698,29 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
             toast = Toast.makeText(getApplicationContext(), txt, duration);
             toast.show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        dialog.dismiss();
+        checkDialog.dismiss();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        //   finish();
+        // Log.i("RRRRRRR", "RRRRR");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        int lastTimeStarted = settings.getInt("last_time_started", -1);
+        Calendar calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_YEAR);
+        // Log.i("RRRRRRR", String.valueOf(today));
+
+        if (today != lastTimeStarted) {
+            finish();
+        }
+
+        super.onResume();
     }
 }

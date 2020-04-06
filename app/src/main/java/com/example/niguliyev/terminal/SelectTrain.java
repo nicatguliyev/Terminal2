@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -102,8 +104,10 @@ public class SelectTrain extends AppCompatActivity  {
         dialog = new ProgressDialog(SelectTrain.this);
         dialog.setCanceledOnTouchOutside(false);
         currentTime = Calendar.getInstance().getTime();
-        dialog.show();
         dialog.setMessage("Zəhmət olmasa gözləyin..");
+       // dialog.show();
+
+
         getTrainTrip();
 
         trainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -191,13 +195,15 @@ public class SelectTrain extends AppCompatActivity  {
 
 
     private void getTrainTrip() {
-
+        dialog.show();
         wagonSpinner.setEnabled(false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serviceUrl, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
                // Log.i("Qatarlar", response);
                 try {
 
@@ -231,7 +237,9 @@ public class SelectTrain extends AppCompatActivity  {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                 dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 if (error instanceof NoConnectionError) {
                     showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 }
@@ -275,7 +283,9 @@ public class SelectTrain extends AppCompatActivity  {
 
             @Override
             public void onResponse(String response) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
 
                 try {
                   //  Log.i("VAqonlar",  response);
@@ -328,7 +338,9 @@ public class SelectTrain extends AppCompatActivity  {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                dialog.hide();
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
                // Log.i("Xeta", error.toString());
 
                 trainListAdapter = new TrainListAdapter(getApplicationContext(), trainModels);
@@ -409,7 +421,7 @@ public class SelectTrain extends AppCompatActivity  {
         new AlertDialog.Builder(SelectTrain.this)
                 .setTitle("Çıxış")
                 .setMessage("Proqramdan çıxmaq istədiyinizə əminsiniz?")
-                .setPositiveButton("Bəli", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Bəlİ", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         SelectTrain.this.finish();
                     }
@@ -432,5 +444,28 @@ public class SelectTrain extends AppCompatActivity  {
             toast = Toast.makeText(getApplicationContext(), txt, duration);
             toast.show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        dialog.dismiss();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+       //   finish();
+       // Log.i("RRRRRRR", "RRRRR");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        int lastTimeStarted = settings.getInt("last_time_started", -1);
+        Calendar calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_YEAR);
+       // Log.i("RRRRRRR", String.valueOf(today));
+
+        if (today != lastTimeStarted) {
+           finish();
+        }
+
+        super.onResume();
     }
 }

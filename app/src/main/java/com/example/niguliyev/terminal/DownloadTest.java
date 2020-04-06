@@ -243,7 +243,7 @@ public class DownloadTest extends AppCompatActivity {
 
             @Override
             public void onResponse(String response) {
-                dialog.hide();
+                dialog.dismiss();
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
@@ -276,7 +276,7 @@ public class DownloadTest extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                dialog.hide();
+                dialog.dismiss();
                 infolyt.setVisibility(VISIBLE);
                 if (error instanceof NoConnectionError) {
                     showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
