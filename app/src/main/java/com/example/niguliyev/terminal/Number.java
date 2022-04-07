@@ -9,12 +9,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -37,7 +35,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.niguliyev.terminal.Model.WagonModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,7 +56,7 @@ public class Number extends AppCompatActivity {
     RadioGroup radioGroup;
     EditText numberEdt;
     ProgressDialog dialog;
-    String serviceUrl = "https://ticket.ady.az/terminal_service.php";
+    String serviceUrl = "https://test-ticket.ady.az/terminal_service.php";
     int trainId;
     String tripDate;
     String wagonNo, trainName;
@@ -145,9 +142,9 @@ public class Number extends AppCompatActivity {
         closeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dialog != null && dialog.isShowing()){
-                    dialog.dismiss();
-                }
+               // if(dialog != null && dialog.isShowing()){
+                    checkDialog.dismiss();
+               // }
             }
         });
 
@@ -204,6 +201,7 @@ public class Number extends AppCompatActivity {
 
             @Override
             public void onResponse(String response) {
+                  Log.i("TicketData", response);
                 if(dialog != null && dialog.isShowing()){
                     dialog.dismiss();
                 }

@@ -1,17 +1,15 @@
 package com.example.niguliyev.terminal;
 
 import android.app.ProgressDialog;
-import android.app.SearchableInfo;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +42,7 @@ public class PlacesActivity extends AppCompatActivity {
 
     Button backBtn, umumiBtn, elekBtn, standartBtn, bosBtn, seePlacesBtn, refreshBtn;
     ProgressDialog dialog;
-    String serviceUrl = "https://ticket.ady.az/terminal_service.php";
+    String serviceUrl = "https://test-ticket.ady.az/terminal_service.php";
     String wagonNo = "";
     String tripDate = "";
     String trainId;
@@ -66,6 +64,8 @@ public class PlacesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places);
+
+        Log.i("NNSN", "Salam");
 
         backBtn = findViewById(R.id.backBtn);
         elekBtn = findViewById(R.id.elekBtn);
@@ -156,6 +156,7 @@ public class PlacesActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 dialog.hide();
+                Log.i("GGGG", response);
 
 //                int maxLogSize = 1000;
 //                for(int i = 0; i <= response.length() / maxLogSize; i++) {

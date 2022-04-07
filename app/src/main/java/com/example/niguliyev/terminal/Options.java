@@ -9,9 +9,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,8 +36,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.zxing.Result;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,7 +46,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,7 +65,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
     ProgressDialog dialog;
     Dialog checkDialog;
     TextView stationTxt, destinationTxt, trainTxt, wagonTxt, placeTxt, klassTxt, customerTxt, svNoTxt, birthdayTxt, ticketTypeTxt, confirmMsgTxt, titleTxt;
-    String serviceUrl = "https://ticket.ady.az/terminal_service.php";
+    String serviceUrl = "https://test-ticket.ady.az/terminal_service.php";
     String saleId = "";
     String pass_no = "";
     Date currentTime = new Date();
@@ -137,6 +134,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
         closeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i("bbcc", "Baglandi");
                 checkDialog.dismiss();
             }
         });
@@ -342,7 +340,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
 
     public void getTicketDetailsFromQR() {
         dialog.show();
-
+        Log.i("TicketData", "QR");
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serviceUrl, new Response.Listener<String>() {
 
             @Override
@@ -351,7 +349,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                     dialog.dismiss();
                 }
 
-                Log.i("TicketData", response);
+               /// Log.i("TicketData", response);
                 try {
 
 
@@ -463,12 +461,14 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
     }
 
     public void getTicketDetailsFromBarCode(final String ticketNo) {
+        Log.i("mmcc", "cccccccccccccccc");
         dialog.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, serviceUrl, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
+
                 if(dialog != null && dialog.isShowing()){
                     dialog.dismiss();
                 }

@@ -8,9 +8,9 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class SelectTrain extends AppCompatActivity  {
@@ -53,7 +52,7 @@ public class SelectTrain extends AppCompatActivity  {
     Spinner dateSpinner;
     Spinner wagonSpinner;
     Spinner  stationSpinner;
-    String serviceUrl = "https://ticket.ady.az/terminal_service.php";
+    String serviceUrl = "https://test-ticket.ady.az/terminal_service.php";
     ProgressDialog dialog;
     Date currentTime = new Date();
     SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
@@ -201,6 +200,7 @@ public class SelectTrain extends AppCompatActivity  {
 
             @Override
             public void onResponse(String response) {
+                Log.i("zzz", response);
                 if(dialog != null && dialog.isShowing()){
                     dialog.dismiss();
                 }
@@ -283,12 +283,13 @@ public class SelectTrain extends AppCompatActivity  {
 
             @Override
             public void onResponse(String response) {
+                Log.i("Vaqonlar",  response);
                 if(dialog != null && dialog.isShowing()){
                     dialog.dismiss();
                 }
 
                 try {
-                  //  Log.i("VAqonlar",  response);
+                    //Log.i("VAqonlar",  response);
 
                       JSONObject jsonObject = new JSONObject(response);
                       String result = jsonObject.getString("result");

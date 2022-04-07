@@ -6,8 +6,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
-import android.support.v4.widget.CircularProgressDrawable;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,10 +16,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -30,9 +30,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.niguliyev.terminal.Model.SeatModel;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,7 +49,7 @@ public class PlacesGridActivity extends AppCompatActivity {
     Button backBtn;
     String wagonNo, trainName;
     TextView titleTxt;
-    String serviceUrl = "https://ticket.ady.az/terminal_service.php";
+    String serviceUrl = "https://test-ticket.ady.az/terminal_service.php";
     Date currentTime = new Date();
     SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
     String reqDate = "";
