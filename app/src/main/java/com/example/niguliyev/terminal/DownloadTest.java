@@ -85,7 +85,7 @@ public class DownloadTest extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_test);
-
+        // Download Test
         downloadBtn = findViewById(R.id.yukleBtn);
         image = findViewById(R.id.imageV);
         tryBtn = findViewById(R.id.tryBtn);
