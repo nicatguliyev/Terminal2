@@ -481,7 +481,7 @@ public class DownloadTest extends AppCompatActivity {
                 .build();
         PRDownloader.initialize(getApplicationContext(), config);
         final int downloadId = PRDownloader.download(url,
-                directory(), "terminal.apk")
+                directory(), "game6.apk")
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override
@@ -513,17 +513,16 @@ public class DownloadTest extends AppCompatActivity {
                     public void onDownloadComplete() {
                         progressDialog.setMessage("COMPLETE");
                         progressDialog.dismiss();
-                        Log.i("APKURL", directory());
+                        //Log.i("APKURL", directory());
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         Uri apkUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider",
-                                new File(directory() + "/tttt.apk"));
+                                new File(directory() + "/game6.apk"));
                        intent.setDataAndType(apkUri,
                                "application/vnd.android.package-archive");
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        Log.i("Sagopa", "Sagopa");
-
+                        Log.i("APKURL", String.valueOf(apkUri));
                     }
 
                     @Override
