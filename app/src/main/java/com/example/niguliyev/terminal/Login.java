@@ -222,7 +222,7 @@ public class Login extends AppCompatActivity {
                      showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                  }
                  if(error instanceof TimeoutError){
-                     showToast("İnternetə bağlantıda problem var", Toast.LENGTH_SHORT);
+                     showToast("Bağlantıda problem var", Toast.LENGTH_SHORT);
                  }
                  if(error instanceof ServerError){
                      showToast("Server xətası", Toast.LENGTH_SHORT);

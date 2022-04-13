@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -25,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,6 +37,14 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.downloader.OnCancelListener;
+import com.downloader.OnDownloadListener;
+import com.downloader.OnPauseListener;
+import com.downloader.OnProgressListener;
+import com.downloader.OnStartOrResumeListener;
+import com.downloader.PRDownloader;
+import com.downloader.PRDownloaderConfig;
+import com.downloader.Progress;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,7 +78,7 @@ public class DownloadTest extends AppCompatActivity {
     Button downloadBtn;
     private ProgressDialog pDialog;
     ImageView image;
-    String version = "5";
+    String version = "4";
     String updateUrl = "https://test-ticket.ady.az/terminal_service.php";
     ProgressDialog dialog;
     Date currentTime = new Date();
@@ -89,6 +100,7 @@ public class DownloadTest extends AppCompatActivity {
         downloadBtn = findViewById(R.id.yukleBtn);
         image = findViewById(R.id.imageV);
         tryBtn = findViewById(R.id.tryBtn);
+        System.out.println();
 
 
         dialog = new ProgressDialog(DownloadTest.this);
@@ -124,7 +136,7 @@ public class DownloadTest extends AppCompatActivity {
 
         } else {
             doPermissionGrantedStuffs();
-            if (ContextCompat.checkSelfPermission(DownloadTest.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(DownloadTest.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 currentTime = Calendar.getInstance().getTime();
                 dialog.show();
                 checkVersion();
@@ -182,7 +194,7 @@ public class DownloadTest extends AppCompatActivity {
 
     private void requestStoragePermission(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
             new AlertDialog.Builder(this)
                     .setTitle("Permission needed")
@@ -190,7 +202,8 @@ public class DownloadTest extends AppCompatActivity {
                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(DownloadTest.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                            ActivityCompat.requestPermissions(DownloadTest.this,
+                                    new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                         }
                     })
                     .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -203,7 +216,7 @@ public class DownloadTest extends AppCompatActivity {
 
         } else {
             ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
     }
 
@@ -219,7 +232,7 @@ public class DownloadTest extends AppCompatActivity {
         if (requestCode == MY_PERMISSIONS_REQUEST_READ_PHONE_STATE) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     doPermissionGrantedStuffs();
-                if (ContextCompat.checkSelfPermission(DownloadTest.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(DownloadTest.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     currentTime = Calendar.getInstance().getTime();
                     dialog.show();
                     checkVersion();
@@ -253,9 +266,11 @@ public class DownloadTest extends AppCompatActivity {
                         String lastVersion = jsonObject2.getString("version");
                          String url = jsonObject2.getString("download_url");
                           fileUrl = URLDecoder.decode(url, StandardCharsets.UTF_8.toString());
+                         Log.i("NNNMMM", url);
 
                         if(!(version.equals(lastVersion))){
-                            new DownloadImage().execute(fileUrl);
+                           // new DownloadImage().execute(fileUrl);
+                            startDownload(url);
                         }
                         else
                         {
@@ -282,14 +297,14 @@ public class DownloadTest extends AppCompatActivity {
                     showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 }
                 else if (error instanceof TimeoutError) {
-                    showToast("Timeout error", Toast.LENGTH_SHORT);
+                    showToast("Timeout xəta", Toast.LENGTH_SHORT);
                 }
                 else if (error instanceof ServerError) {
 
-                    showToast("Server xətası " + error.networkResponse.statusCode, Toast.LENGTH_SHORT);
+                    showToast("Server xətası: " + error.networkResponse.statusCode, Toast.LENGTH_SHORT);
                 }
                 else{
-                    showToast("Bilinməyən xəta:" + String.valueOf(error.networkResponse.statusCode), Toast.LENGTH_SHORT);
+                    showToast("Bilinməyən xəta: " + String.valueOf(error.networkResponse.statusCode), Toast.LENGTH_SHORT);
                 }
             }
         }) {
@@ -337,7 +352,7 @@ public class DownloadTest extends AppCompatActivity {
         switch (id){
             case progressType:
                 pDialog = new ProgressDialog(this);
-                pDialog.setMessage("Gozleyin");
+                pDialog.setMessage("Zəhmət olmasa gözləyin");
                 pDialog.setIndeterminate(false);
                 pDialog.setMax(100);
                 pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -370,8 +385,8 @@ public class DownloadTest extends AppCompatActivity {
                 InputStream inputStream = new BufferedInputStream(url.openStream(), 8192);
 
                 String storageDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-                String fileName = "/newimage2.apk";
-                File imageFile = new File(storageDir + fileName);
+                String fileName = "/terminal.apk";
+                File imageFile = new File(directory() + fileName);
                 OutputStream outputStream = new FileOutputStream(imageFile);
 
                 byte data[] = new byte[1024];
@@ -409,9 +424,13 @@ public class DownloadTest extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
            // dismissDialog(progressType);
+           // Log.i("TESTT", "Testt");
             finish();
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(new   File(Environment.getExternalStorageDirectory()  + "/newimage2.apk")), "application/vnd.android.package-archive");
+            Uri apkUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName()+".provider",
+                    new File(directory()+"/terminal.apk") );
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(intent);
 
         }
@@ -443,5 +462,78 @@ public class DownloadTest extends AppCompatActivity {
         }
     }
 
+    private String directory() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+    }
+
+    private void startDownload(String url) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Downloading .... ");
+        progressDialog.setMessage("Preparing....");
+        progressDialog.setCancelable(false);
+
+        progressDialog.show();
+
+        PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
+                .setReadTimeout(30_000)
+                .setConnectTimeout(30_000)
+                .build();
+        PRDownloader.initialize(getApplicationContext(), config);
+        final int downloadId = PRDownloader.download(url,
+                directory(), "terminal.apk")
+                .build()
+                .setOnStartOrResumeListener(new OnStartOrResumeListener() {
+                    @Override
+                    public void onStartOrResume() {
+
+                    }
+                })
+                .setOnPauseListener(new OnPauseListener() {
+                    @Override
+                    public void onPause() {
+
+                    }
+                })
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel() {
+
+                    }
+                })
+                .setOnProgressListener(new OnProgressListener() {
+                    @Override
+                    public void onProgress(Progress progress) {
+                        progressDialog.setMessage("PROGRESS");
+                    }
+                })
+                .start(new OnDownloadListener() {
+
+                    @Override
+                    public void onDownloadComplete() {
+                        progressDialog.setMessage("COMPLETE");
+                        progressDialog.dismiss();
+                        Log.i("APKURL", directory());
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        Uri apkUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider",
+                                new File(directory() + "/tttt.apk"));
+                       intent.setDataAndType(apkUri,
+                               "application/vnd.android.package-archive");
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        Log.i("Sagopa", "Sagopa");
+
+                    }
+
+                    @Override
+                    public void onError(com.downloader.Error error) {
+                        progressDialog.setMessage("ERROR");
+                        Log.i("Erroooor", String.valueOf(error.getConnectionException()));
+                    }
+
+                });
+
+    }
 
 }
