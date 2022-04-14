@@ -469,8 +469,8 @@ public class DownloadTest extends AppCompatActivity {
     private void startDownload(String url) {
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Downloading .... ");
-        progressDialog.setMessage("Preparing....");
+        progressDialog.setTitle("PROQRAM GÜNCƏLLƏNMƏ");
+        progressDialog.setMessage("HAZIRLANIR....");
         progressDialog.setCancelable(false);
 
         progressDialog.show();
@@ -481,7 +481,7 @@ public class DownloadTest extends AppCompatActivity {
                 .build();
         PRDownloader.initialize(getApplicationContext(), config);
         final int downloadId = PRDownloader.download(url,
-                directory(), "game6.apk")
+                directory(), "terminal.apk")
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override
@@ -504,25 +504,26 @@ public class DownloadTest extends AppCompatActivity {
                 .setOnProgressListener(new OnProgressListener() {
                     @Override
                     public void onProgress(Progress progress) {
-                        progressDialog.setMessage("PROGRESS");
+                        progressDialog.setMessage("YÜKLƏNİR");
                     }
                 })
                 .start(new OnDownloadListener() {
 
                     @Override
                     public void onDownloadComplete() {
-                        progressDialog.setMessage("COMPLETE");
-                        progressDialog.dismiss();
-                        //Log.i("APKURL", directory());
+                        progressDialog.setMessage("TAMAMLANDI");
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         Uri apkUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider",
-                                new File(directory() + "/game6.apk"));
-                       intent.setDataAndType(apkUri,
-                               "application/vnd.android.package-archive");
+                                new File(directory() + "/terminal.apk"));
+                        intent.setDataAndType(apkUri,
+                                "application/vnd.android.package-archive");
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        Log.i("APKURL", String.valueOf(apkUri));
                     }
 
                     @Override
