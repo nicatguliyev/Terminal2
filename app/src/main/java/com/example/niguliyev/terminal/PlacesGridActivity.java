@@ -1,5 +1,6 @@
 package com.example.niguliyev.terminal;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,11 +40,20 @@ import org.json.JSONObject;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class PlacesGridActivity extends AppCompatActivity {
 
@@ -49,7 +61,7 @@ public class PlacesGridActivity extends AppCompatActivity {
     Button backBtn;
     String wagonNo, trainName;
     TextView titleTxt;
-    String serviceUrl = "https://test-ticket.ady.az/terminal_service.php";
+    String serviceUrl = "https://ticket.ady.az/terminal_service.php";
     Date currentTime = new Date();
     SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
     String reqDate = "";
@@ -65,6 +77,8 @@ public class PlacesGridActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_grid);
+
+        handleSSLHandshake();
 
         dialog = new ProgressDialog(PlacesGridActivity.this);
         dialog.setMessage("Zəhmət olmasa gözləyin");
@@ -206,6 +220,18 @@ public class PlacesGridActivity extends AppCompatActivity {
 
             }
         }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+//                params.put("Username", "User");
+//                params.put("Password", "222333444");
+                String creds = String.format("%s:%s","User","222333444");
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                params.put("Authorization", auth);
+                return params;
+            }
+
             @Override
             protected Map<String, String> getParams() {//
                 Map<String, String> params = new HashMap<>();
@@ -266,5 +292,35 @@ public class PlacesGridActivity extends AppCompatActivity {
         }
 
         super.onResume();
+    }
+
+    @SuppressLint("TrulyRandom")
+    public static void handleSSLHandshake() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }};
+
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String arg0, SSLSession arg1) {
+                    return true;
+                }
+            });
+        } catch (Exception ignored) {
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.niguliyev.terminal;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -26,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,11 +47,20 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -65,7 +76,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
     ProgressDialog dialog;
     Dialog checkDialog;
     TextView stationTxt, destinationTxt, trainTxt, wagonTxt, placeTxt, klassTxt, customerTxt, svNoTxt, birthdayTxt, ticketTypeTxt, confirmMsgTxt, titleTxt;
-    String serviceUrl = "https://test-ticket.ady.az/terminal_service.php";
+    String serviceUrl = "https://ticket.ady.az/terminal_service.php";
     String saleId = "";
     String pass_no = "";
     Date currentTime = new Date();
@@ -84,6 +95,8 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
         setContentView(R.layout.activity_options);
 
         //changeColor(R.color.blue);
+
+        handleSSLHandshake();
 
         scanBtn = (Button) findViewById(R.id.scanBtn);
         senedBtn = findViewById(R.id.senedBtn);
@@ -222,7 +235,7 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                          Log.i("sdsd", edt.getText().toString());
                 if (edt.getText().toString().length() < 20) {
                     if (!edt.getText().toString().equals("")) {
                         String x = edt.getText().toString();
@@ -234,9 +247,11 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                     String text = null;
                     try {
                         String x = edt.getText().toString().substring(2);
+                        Log.i("HHHHHUUUU", x);
                         byte[] z = Base64.decode(x, Base64.DEFAULT);
                         text = new String(z, "UTF-8");
                         JSONObject jsonObject = new JSONObject(text);
+//                        Log.i("HHHHHUUUU", text);
                         saleId = jsonObject.getString("sale_id");
                         pass_no = jsonObject.getString("passenger_passport_no");
                         currentTime = Calendar.getInstance().getTime();
@@ -440,6 +455,18 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                 }
             }
         }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+//                params.put("Username", "User");
+//                params.put("Password", "222333444");
+                String creds = String.format("%s:%s","User","222333444");
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                params.put("Authorization", auth);
+                return params;
+            }
+            
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -563,6 +590,19 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                 }
             }
         }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+//                params.put("Username", "User");
+//                params.put("Password", "222333444");
+                String creds = String.format("%s:%s","User","222333444");
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                params.put("Authorization", auth);
+                return params;
+            }
+            
+            
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -634,6 +674,19 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
                 }
             }
         }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+//                params.put("Username", "User");
+//                params.put("Password", "222333444");
+                String creds = String.format("%s:%s","User","222333444");
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                params.put("Authorization", auth);
+                return params;
+            }
+
+
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -722,5 +775,35 @@ public class Options extends AppCompatActivity implements ZXingScannerView.Resul
         }
 
         super.onResume();
+    }
+
+    @SuppressLint("TrulyRandom")
+    public static void handleSSLHandshake() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }};
+
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String arg0, SSLSession arg1) {
+                    return true;
+                }
+            });
+        } catch (Exception ignored) {
+        }
     }
 }

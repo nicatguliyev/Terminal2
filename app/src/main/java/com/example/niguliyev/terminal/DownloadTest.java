@@ -1,6 +1,7 @@
 package com.example.niguliyev.terminal;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -20,6 +21,7 @@ import androidx.core.content.FileProvider;
 
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -65,11 +67,20 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import static android.view.View.VISIBLE;
 
@@ -78,8 +89,8 @@ public class DownloadTest extends AppCompatActivity {
     Button downloadBtn;
     private ProgressDialog pDialog;
     ImageView image;
-    String version = "4";
-    String updateUrl = "https://test-ticket.ady.az/terminal_service.php";
+    String version = "6";
+    String updateUrl = "https://ticket.ady.az/terminal_service.php";
     ProgressDialog dialog;
     Date currentTime = new Date();
     SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
@@ -96,6 +107,8 @@ public class DownloadTest extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_test);
+
+        handleSSLHandshake();
         // Download Test
         downloadBtn = findViewById(R.id.yukleBtn);
         image = findViewById(R.id.imageV);
@@ -294,6 +307,7 @@ public class DownloadTest extends AppCompatActivity {
                 dialog.dismiss();
                 infolyt.setVisibility(VISIBLE);
                 if (error instanceof NoConnectionError) {
+                    Log.i("CCCCC", error.toString());
                     showToast("İnternetə qoşulmayıb", Toast.LENGTH_SHORT);
                 }
                 else if (error instanceof TimeoutError) {
@@ -308,6 +322,17 @@ public class DownloadTest extends AppCompatActivity {
                 }
             }
         }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+//                params.put("Username", "User");
+//                params.put("Password", "222333444");
+                String creds = String.format("%s:%s","User","222333444");
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                params.put("Authorization", auth);
+                return params;
+            }
             @Override
             protected Map<String, String> getParams() {
                 String reqDate = sdf.format(currentTime);
@@ -319,7 +344,7 @@ public class DownloadTest extends AppCompatActivity {
                 params.put("terminal_id", deviceId);
                 params.put("request_dt", reqDate);
                 params.put("token", token);
-
+                Log.i("Parametrler", params.toString());
                 return  params;
             }
         };
@@ -534,6 +559,36 @@ public class DownloadTest extends AppCompatActivity {
 
                 });
 
+    }
+
+    @SuppressLint("TrulyRandom")
+    public static void handleSSLHandshake() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }};
+
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String arg0, SSLSession arg1) {
+                    return true;
+                }
+            });
+        } catch (Exception ignored) {
+        }
     }
 
 }

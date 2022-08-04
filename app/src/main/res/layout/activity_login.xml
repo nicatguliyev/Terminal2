@@ -33,7 +33,7 @@
             android:hint="İstifadəçi"
             android:drawablePadding="12dp"
             android:singleLine="true"
-            android:text="r.askerov"
+            android:text=""
             android:nextFocusDown="@id/passEdt"
             android:drawableLeft="@drawable/ic_username"
             android:textColor="#000000" />
@@ -47,7 +47,7 @@
             android:layout_below="@+id/userEdt"
             android:layout_marginTop="16dp"
             android:drawablePadding="16dp"
-            android:text="123456"
+            android:text=""
             android:inputType="textPassword"
             android:background="@drawable/edittext_background"
             android:drawableLeft="@drawable/ic_password"
